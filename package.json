@@ -17,6 +17,7 @@
     "@bbob/preset-html5": "^2.5.5",
     "@iarna/cli": "^2.1.0",
     "@perl/qr": "^1.2.0",
+    "@perl/qw": "^1.0.1",
     "funstream": "^4.2.0",
     "marked": "^0.8.2"
   },

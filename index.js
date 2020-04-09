@@ -10,7 +10,7 @@ const bbobHTML = require('@bbob/html/')
 const presetHTML5 = require('@bbob/preset-html5')
 const marked = require('marked')
 const qr = require('@perl/qr')
-
+const qw = require('@perl/qw')
 marked.setOptions({
   gfm: true,
   breaks: true,
@@ -22,29 +22,16 @@ const gameToSlug = {
   SkyrimSE: 'skyrimspecialedition'
 }
 
-const mergeColors = [
-  '#ffc0c0',
-  '#fffbbf',
-  '#cdffc0',
-  '#bfffe9',
-  '#bfe1ff',
-  '#d5c0ff',
-  '#ffbff3',
-  '#ffc3bf',
-  '#fffbbf',
-  '#cdffbf',
-  '#bfffe9',
-  '#c0e1ff',
-  '#d5c0ff',
-  '#ffbff3',
-  '#ffcbbf',
-  '#fcffbf',
-  '#c5ffbf',
-  '#bffff0',
-  '#c0d9ff',
-  '#ddbfff',
-  '#ffbfeb',
-]
+const mergeColors = qw`
+  #ffc0c0 #fffbbf #cdffc0 #bfffe9 #bfe1ff #d5c0ff #ffbff3
+  #ffc3bf #fffbbf #cdffbf #bfffe9 #c0e1ff #d5c0ff #ffbff3
+  #ffcbbf #fcffbf #c5ffbf #bffff0 #c0d9ff #ddbfff #ffbfeb
+  #ffd3bf #f5ffbf #c0ffc1 #bffff8 #bfd1ff #e5c0ff #ffc0e0
+  #ffdbc0 #edffc0 #bfffca #bfffff #c0caff #edbfff #ffbfdc
+  #ffe3bf #e5ffbf #bfffd1 #c0f9ff #c0c1ff #f4bfff #ffc0d3
+  #ffeac0 #ddffbf #c0ffda #bff1ff #c6c0ff #fdc0ff #ffbfcb
+  #fff3bf #d5ffbf #c0ffe1 #bfe9ff #cdbfff #ffbffa #ffc0c4
+  `
 
 function readmeta (moddir, mod) {
   try {
