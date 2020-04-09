@@ -22,6 +22,30 @@ const gameToSlug = {
   SkyrimSE: 'skyrimspecialedition'
 }
 
+const mergeColors = [
+  '#ffc0c0',
+  '#fffbbf',
+  '#cdffc0',
+  '#bfffe9',
+  '#bfe1ff',
+  '#d5c0ff',
+  '#ffbff3',
+  '#ffc3bf',
+  '#fffbbf',
+  '#cdffbf',
+  '#bfffe9',
+  '#c0e1ff',
+  '#d5c0ff',
+  '#ffbff3',
+  '#ffcbbf',
+  '#fcffbf',
+  '#c5ffbf',
+  '#bffff0',
+  '#c0d9ff',
+  '#ddbfff',
+  '#ffbfeb',
+]
+
 function readmeta (moddir, mod) {
   try {
     return ini.parse(fs.readFileSync(moddir + '/' + mod + '/meta.ini', 'utf8')).General
@@ -50,6 +74,7 @@ async function main (opts, modlist, moddir) {
   list.reverse()
   const mods = {}
   const espindex = {}
+  let merges = -1
   let order = -1
   for (let line of list) {
     ++ order
@@ -101,7 +126,7 @@ async function main (opts, modlist, moddir) {
           if (!plugins[load]) continue
           src.push(plugins[load])
         }
-        merge = {options, src}
+        merge = {num: ++merges, options, src}
       }
       mods[mod] = { order, name: mod, id, url, comments, notes, esps, merge }
       for (let esp of esps) {
@@ -116,6 +141,7 @@ async function main (opts, modlist, moddir) {
       const espmodname = espindex[esp.filename]
       if (!espmodname) continue
       const espmod = mods[espmodname]
+      if (espmod.inMerge) continue
       espmod.inMerge = modname
 //      console.log(modname, '->', espmod.name, '<-', esp.filename)
     }
@@ -126,10 +152,13 @@ async function main (opts, modlist, moddir) {
 // route
 //      console.log(meta)
   console.log(`
-<!doctype>
+<!doctype html>
 <html>
 <head>
 <style>
+a {
+  text-decoration: none;
+}
 .category {
   font-size: 20pt;
   font-weight: bold;
@@ -140,7 +169,7 @@ body {
 ul {
   padding-left: 1em;
 }
-
+${mergeColors.map((_,ii) => `.inmerge${ii} { background: ${_} }\n.merge${ii} { background: #333; color: ${_}; }`).join('\n')}
 </style>
 </head>
 <body>
@@ -161,9 +190,13 @@ ul {
     if (mod.isCategory) {
       process.stdout.write(`<li class="category">${mod.name}</li>`)
     } else {
-      process.stdout.write('<li>')
       if (mod.inMerge) {
+        process.stdout.write(`<li class="inmerge${mods[mod.inMerge].merge.num}">`)
         process.stdout.write(`&nbsp; &nbsp;`)
+      } else if (mod.merge) {
+        process.stdout.write(`<li class="merge${mod.merge.num}">`)
+      } else {
+        process.stdout.write('<li>')
       }
       if (mod.url) {
         process.stdout.write(`<a href="${mod.url}">`)
